@@ -1,5 +1,5 @@
 {
-  "name": "openapi-nextjs-test",
+  "name": "openai-nextjs-test",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,12 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@types/swagger-ui-react": "^5.18.0",
     "next": "15.5.5",
+    "openai": "^6.3.0",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-react": "^5.29.4"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

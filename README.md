@@ -1,118 +1,113 @@
-# Next.js OpenAPI Test App
+# Next.js OpenAI Test App
 
-A simple test application demonstrating OpenAPI (Swagger) integration with Next.js 14+. This project provides a practical example of how to create, document, and visualize RESTful APIs using OpenAPI specifications in a modern Next.js application.
+A simple test application for trying OpenAI API with Next.js. This app demonstrates how to integrate OpenAI's GPT models into a Next.js application with a clean chat interface.
 
 ## Features
 
-- **OpenAPI 3.0 Specification**: Fully documented API with OpenAPI standard
-- **Interactive API Documentation**: Swagger UI integration for testing endpoints
-- **Sample API Endpoints**: Working examples including GET and POST operations
+- **OpenAI Chat Integration**: Real-time chat with GPT-3.5 Turbo
+- **Modern UI**: Clean and responsive chat interface built with Tailwind CSS
 - **TypeScript Support**: Full type safety throughout the application
-- **Modern Stack**: Built with Next.js 14+ App Router and Tailwind CSS
+- **Next.js 14+ App Router**: Leveraging the latest Next.js features
+- **Error Handling**: Comprehensive error handling and user feedback
+- **Dark Mode Support**: Automatic dark mode support
+
+## Prerequisites
+
+- Node.js 18+ and npm
+- OpenAI API key (get one from [OpenAI Platform](https://platform.openai.com/api-keys))
 
 ## Getting Started
 
-### Prerequisites
+### 1. Clone the repository
 
-- Node.js 18+ and npm
-
-### Installation
-
-1. Clone the repository:
 ```bash
 git clone https://github.com/cka09191/psychic-parakeet.git
 cd psychic-parakeet
 ```
 
-2. Install dependencies:
+### 2. Install dependencies
+
 ```bash
 npm install
 ```
 
-3. Run the development server:
+### 3. Set up environment variables
+
+Create a `.env.local` file in the root directory:
+
+```bash
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+Replace `your_openai_api_key_here` with your actual OpenAI API key.
+
+**Important:** Never commit your `.env.local` file to version control. It's already included in `.gitignore`.
+
+### 4. Run the development server
+
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the app.
+
+## How to Use
+
+1. Once the app is running, you'll see a chat interface
+2. Type a message in the input field at the bottom
+3. Click "Send" or press Enter to send your message
+4. The app will send your message to OpenAI's GPT-3.5 Turbo model
+5. The AI's response will appear in the chat
+6. Continue the conversation or click "Clear" to start fresh
 
 ## Project Structure
 
 ```
 ├── app/
 │   ├── api/
-│   │   ├── hello/          # Simple hello endpoint
-│   │   ├── users/          # CRUD operations for users
-│   │   └── openapi/        # OpenAPI specification endpoint
-│   ├── api-docs/           # Swagger UI page
-│   └── page.tsx            # Home page
+│   │   └── chat/           # API route for OpenAI integration
+│   │       └── route.ts
+│   ├── layout.tsx          # Root layout
+│   ├── page.tsx            # Main chat interface
+│   └── globals.css         # Global styles
 ├── public/                 # Static assets
+├── .env.local             # Environment variables (create this)
 └── README.md
 ```
 
-## API Endpoints
+## API Endpoint
 
-### GET /api/hello
-Returns a simple hello message with timestamp.
+### POST /api/chat
 
-**Response:**
-```json
-{
-  "message": "Hello from Next.js!",
-  "timestamp": "2025-10-16T04:14:27.135Z"
-}
-```
-
-### GET /api/users
-Retrieves a list of sample users.
-
-**Response:**
-```json
-[
-  { "id": 1, "name": "John Doe", "email": "john@example.com" },
-  { "id": 2, "name": "Jane Smith", "email": "jane@example.com" }
-]
-```
-
-### POST /api/users
-Creates a new user.
+Sends a message to OpenAI and returns the response.
 
 **Request Body:**
 ```json
 {
-  "name": "New User",
-  "email": "newuser@example.com"
+  "message": "Your message here"
 }
 ```
 
 **Response:**
 ```json
 {
-  "id": 4,
-  "name": "New User",
-  "email": "newuser@example.com"
+  "reply": "AI response",
+  "model": "gpt-3.5-turbo",
+  "usage": {
+    "prompt_tokens": 10,
+    "completion_tokens": 20,
+    "total_tokens": 30
+  }
 }
 ```
-
-### GET /api/openapi
-Returns the complete OpenAPI specification in JSON format.
-
-## Viewing API Documentation
-
-Visit [http://localhost:3000/api-docs](http://localhost:3000/api-docs) to access the interactive Swagger UI where you can:
-
-- View all available endpoints
-- See detailed request/response schemas
-- Test API endpoints directly from the browser
-- Download the OpenAPI specification
 
 ## Technologies Used
 
 - **Next.js 14+**: React framework with App Router
 - **TypeScript**: Type-safe development
+- **OpenAI SDK**: Official OpenAI Node.js library
 - **Tailwind CSS**: Utility-first CSS framework
-- **Swagger UI React**: Interactive API documentation
-- **OpenAPI 3.0**: API specification standard
+- **React**: UI library
 
 ## Development
 
@@ -134,11 +129,52 @@ npm start
 npm run lint
 ```
 
+## Configuration
+
+You can modify the OpenAI settings in `app/api/chat/route.ts`:
+
+- **Model**: Change `gpt-3.5-turbo` to other models like `gpt-4` (requires appropriate API access)
+- **Max Tokens**: Adjust `max_tokens` to control response length
+- **Temperature**: Add temperature parameter to control response creativity (0-2)
+
+Example:
+```typescript
+const completion = await openai.chat.completions.create({
+  model: 'gpt-3.5-turbo',
+  messages: [...],
+  max_tokens: 500,
+  temperature: 0.7, // Optional: 0-2, higher = more creative
+});
+```
+
+## Troubleshooting
+
+### "OpenAI API key is not configured" error
+- Make sure you've created a `.env.local` file in the root directory
+- Verify that `OPENAI_API_KEY` is set correctly in the file
+- Restart the development server after creating/modifying `.env.local`
+
+### Rate limit errors
+- OpenAI has rate limits based on your account tier
+- Consider implementing rate limiting in your application for production use
+
+### API errors
+- Check your OpenAI API key is valid and has available credits
+- Verify your internet connection
+- Check the console for detailed error messages
+
+## Security Notes
+
+- Never expose your OpenAI API key in client-side code
+- The API route (`/api/chat`) runs on the server, keeping your API key secure
+- Always use environment variables for sensitive data
+- Consider implementing authentication and rate limiting for production use
+
 ## Learn More
 
 - [Next.js Documentation](https://nextjs.org/docs)
-- [OpenAPI Specification](https://swagger.io/specification/)
-- [Swagger UI](https://swagger.io/tools/swagger-ui/)
+- [OpenAI API Documentation](https://platform.openai.com/docs)
+- [OpenAI Node.js SDK](https://github.com/openai/openai-node)
 
 ## License
 
